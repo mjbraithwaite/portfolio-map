@@ -19,7 +19,7 @@ var config = {
     flySpeed: 0.6, // how fast the camera flies between stories (lower = slower)
     flyCurve: 1.6, // how far it zooms out mid-flight (higher = further)
     title: "Michael Braithwaite's data reporting portfolio", // double quotes, because the text contains an apostrophe
-    subtitle: "This storymap's javascript is written in part by Claude Code. Everything else featured is entirely human created.",
+    subtitle: "This Mapbox storymap was customized using Claude Code. Everything else featured is entirely human created.",
     footer: `Source: source citations, etc. <br> Created using <a href="https://github.com/mapbox/storytelling" target="_blank">Mapbox Storytelling</a> template.`,
     chapters: [
         {
