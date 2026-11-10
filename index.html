@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Mapbox Storytelling</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="icon" type="image/x-icon"
+        href="https://raw.githubusercontent.com/mapbox/assembly/publisher-staging/src/svgs/mapbox.svg">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdn.jsdelivr.net/npm/mapbox-gl-globe-minimap@1.2.0/dist/bundle.js"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        a,
+        a:hover,
+        a:visited {
+            color: #0071bc;
+        }
+
+        #map {
+            top: 0;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+
+        #header {
+            margin: auto;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+
+        #header h1,
+        #header h2,
+        #header p {
+            margin: 0;
+            padding: 1vh 2vw;
+            text-align: center;
+        }
+
+        #header h1 { font-size: 24px; padding-top: 2vh; }
+        #header h2 { font-size: 15px; font-weight: normal; padding-bottom: 2vh; }
+        #header p { font-size: 13px; }
+
+        #footer {
+            width: 100%;
+            min-height: 5vh;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
+            text-align: center;
+            line-height: 25px;
+            font-size: 13px;
+            position: relative;
+            z-index: 5;
+        }
+
+        #features {
+            padding-top: 10vh;
+            padding-bottom: 10vh;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        .centered {
+            width: 50vw;
+            margin: 0 auto;
+        }
+
+        .lefty {
+            width: 33vw;
+            margin-left: 5vw;
+        }
+
+        .righty {
+            width: 33vw;
+            margin-left: 62vw;
+        }
+
+        .fully {
+            width: 100%;
+            margin: auto;
+        }
+
+        .light {
+            color: #444;
+            background-color: #fafafa;
+        }
+
+        .dark {
+            color: #fafafa;
+            background-color: #444;
+        }
+
+        .step {
+            padding-bottom: 50vh;
+            /* margin-bottom: 10vh; */
+            opacity: 0.25;
+        }
+
+        .step.active {
+            opacity: 0.9;
+        }
+
+        .step div {
+            padding: 18px 28px;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+        .step h3 {
+            font-size: 16px;
+            line-height: 1.25;
+            margin: 8px 0 4px;
+        }
+
+        /* Link preview card for the published story */
+        .link-preview {
+            display: block;
+            margin-top: 12px;
+            border: 1px solid rgba(0, 0, 0, .15);
+            border-radius: 6px;
+            overflow: hidden;
+            text-decoration: none;
+            background: #fff;
+        }
+
+        a.link-preview,
+        a.link-preview:visited,
+        a.link-preview:hover { color: #222; }
+        .link-preview:hover { border-color: rgba(0, 0, 0, .35); }
+
+        .link-preview img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1.91 / 1;  /* the shape social sites use for share images */
+            object-fit: cover;
+        }
+
+        .link-preview span { display: block; padding: 0 12px; }
+        .link-site { padding-top: 10px !important; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: #777; }
+        .link-title { font-size: 13px; font-weight: bold; line-height: 1.3; margin-top: 2px; }
+        .link-text {
+            font-size: 12px;
+            line-height: 1.4;
+            color: #555;
+            margin-top: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;   /* two lines, then "..." */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .link-preview span:last-child { padding-bottom: 10px; }
+
+        .step img {
+            width: 100%;
+        }
+
+        /* Tag above the headline and role line under it */
+        .story-tag {
+            display: inline-block;
+            font-size: 10px;
+            line-height: 1.6;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            padding: 0 10px;
+            opacity: .8;
+        }
+
+        .step h3 {
+            margin-bottom: 4px;
+        }
+
+        .story-role {
+            margin-top: 0;
+            font-style: italic;
+            font-size: 11px;
+            opacity: .75;
+        }
+
+        /* Datawrapper / Flourish charts inside a chapter card (centered and full-width cards) */
+        .step div.chart {
+            padding: 0;
+            margin-top: 16px;
+        }
+
+        .chart iframe,
+        .chart img {
+            display: block;
+            width: 100%;
+            border: 0;
+            background: #fff;
+        }
+
+        .chart img { height: auto; }
+
+        /* Chart panel on the opposite side from a left or right card. It sits on the page
+           with its top level with the story card's top, and scrolls with the page
+           (positioned by placeChartPanels below). Only the current chapter's panel shows. */
+        .chart-panel {
+            position: absolute;
+            top: 0;
+            width: 32vw;
+            box-sizing: border-box;
+            padding: 16px;
+            border-radius: 6px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, .35);
+            z-index: 2;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .5s, visibility .5s;
+        }
+
+        .chart-panel.side-right { right: 5vw; }
+        .chart-panel.side-left { left: 5vw; }
+        .chart-panel.show { opacity: 0.9; visibility: visible; }  /* same see-through as the active story card */
+
+        /* Story card: same rounded corners as the chart panel */
+        .step > div {
+            border-radius: 6px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, .35);  /* same shadow as the chart panel */
+        }
+        .chart-panel .chart:first-child { margin-top: 0; }
+        .chart-panel .chart + .chart { margin-top: 16px; }
+
+        /* Shown when the map data can't load because the page was opened straight from the folder */
+        #local-file-note {
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            max-width: 90vw;
+            background: #fff4d6;
+            color: #4a3b00;
+            border: 1px solid #e0c060;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 750px) {
+
+            .centered,
+            .lefty,
+            .righty,
+            .fully {
+                width: 90vw;
+                margin: 0 auto;
+            }
+        }
+
+        /* Fix issue on mobile browser where scroll breaks  */
+        .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan,
+        .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan .mapboxgl-canvas {
+            touch-action: unset;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+    <div id="story"></div>
+
+    <script src="./config.js"></script>
+    <script>
+        // Datawrapper charts tell the page how tall they want to be; this sets each one's height to match.
+        window.addEventListener('message', function (event) {
+            var heights = event.data && event.data['datawrapper-height'];
+            if (!heights) return;
+            document.querySelectorAll('.chart iframe').forEach(function (frame) {
+                if (frame.contentWindow === event.source) {
+                    for (var id in heights) frame.style.height = heights[id] + 'px';
+                }
+            });
+        });
+
+        // Datawrapper charts can switch to dark mode on their own; this keeps them light.
+        function lightModeUrl(src) {
+            if (src.indexOf('datawrapper.dwcdn.net') === -1 || /[?&]dark=/.test(src)) return src;
+            return src + (src.indexOf('?') === -1 ? '?' : '&') + 'dark=false';
+        }
+
+        // Show or hide a chapter's chart panel
+        function showCharts(chapterId, show) {
+            document.querySelectorAll('.chart-panel').forEach(function (panel) {
+                if (panel.dataset.chapter === chapterId) panel.classList.toggle('show', show);
+            });
+            placeChartPanels();
+        }
+
+        // Put each chart panel level with the top of its story card. The chapter is made at
+        // least as tall as its panel, so a long chart never runs into the next story.
+        var chartCards = {}; // chapter id -> its story card
+        function placeChartPanels() {
+            document.querySelectorAll('.chart-panel').forEach(function (panel) {
+                var card = chartCards[panel.dataset.chapter];
+                if (!card) return;
+                card.parentElement.style.minHeight = panel.offsetHeight + 'px';
+                panel.style.top = (card.getBoundingClientRect().top + window.scrollY) + 'px';
+            });
+            if (typeof scroller !== 'undefined' && scroller.resize) scroller.resize();
+        }
+        var placing = false;
+        function placeSoon() {
+            if (placing) return;
+            placing = true;
+            requestAnimationFrame(function () { placing = false; placeChartPanels(); });
+        }
+        window.addEventListener('resize', placeSoon);
+        window.addEventListener('load', placeSoon);
+        // Datawrapper charts change height as they load; re-place everything when a panel's size changes
+        var panelWatcher = window.ResizeObserver ? new ResizeObserver(placeSoon) : null;
+
+        // ---------- Map data (GeoJSON) for each chapter ----------
+        // Each chapter with a "geojson" setting gets up to four layers: filled shapes,
+        // lines, points and point labels. They start hidden and fade in with the chapter.
+        function dataLayers(chapter) {
+            var id = chapter.id + '-data';
+            var layers = [
+                { id: id + '-fill', opacity: 0.6 },
+                { id: id + '-line', opacity: 0.95 },
+                { id: id + '-point', opacity: 1 }
+            ];
+            if (chapter.geojson.labels !== false) layers.push({ id: id + '-label', opacity: 1 });
+            return layers;
+        }
+
+        function addChapterData(chapter) {
+            var g = chapter.geojson;
+            var id = chapter.id + '-data';
+            var color = g.color || '#ffb347';
+            var isType = function (types) { return ['match', ['geometry-type'], types, true, false]; };
+
+            map.addSource(id, { type: 'geojson', data: g.file });
+            map.addLayer({
+                id: id + '-fill', type: 'fill', source: id,
+                filter: isType(['Polygon', 'MultiPolygon']),
+                paint: {
+                    // Shapes keep their Datawrapper fill color unless the chapter sets fillColor
+                    'fill-color': g.fillColor || ['coalesce', ['get', 'fill'], color],
+                    'fill-opacity': 0,
+                    'fill-emissive-strength': 1  // keeps colors bright under the map style's lighting
+                }
+            });
+            map.addLayer({
+                id: id + '-line', type: 'line', source: id,
+                filter: isType(['LineString', 'MultiLineString']),
+                layout: { 'line-cap': 'round', 'line-join': 'round' },
+                paint: {
+                    'line-color': color,
+                    'line-width': ['+', ['coalesce', ['get', 'stroke-width'], 2], 1],
+                    'line-opacity': 0,
+                    'line-emissive-strength': 1
+                }
+            });
+            map.addLayer({
+                id: id + '-point', type: 'circle', source: id,
+                filter: isType(['Point', 'MultiPoint']),
+                paint: {
+                    'circle-radius': 5,
+                    'circle-color': color,
+                    'circle-stroke-color': '#111111',
+                    'circle-stroke-width': 1.5,
+                    'circle-opacity': 0,
+                    'circle-stroke-opacity': 0,
+                    'circle-emissive-strength': 1
+                }
+            });
+            if (g.labels !== false) {
+                map.addLayer({
+                    id: id + '-label', type: 'symbol', source: id,
+                    filter: isType(['Point', 'MultiPoint']),
+                    layout: {
+                        'text-field': ['get', 'title'],
+                        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+                        'text-size': 12,
+                        'text-offset': [0, 0.9],
+                        'text-anchor': 'top'
+                    },
+                    paint: {
+                        'text-color': '#ffffff',
+                        'text-halo-color': '#000000',
+                        'text-halo-width': 1.4,
+                        'text-opacity': 0,
+                        'icon-opacity': 0,
+                        'text-emissive-strength': 1
+                    }
+                });
+            }
+        }
+
+        function fadeChapterData(chapter, show) {
+            if (!chapter.geojson) return;
+            dataLayers(chapter).forEach(function (layer) {
+                if (!map.getLayer(layer.id)) return;
+                setLayerOpacity({ layer: layer.id, opacity: show ? layer.opacity : 0, duration: 1000 });
+            });
+        }
+
+        // Browsers refuse to load data files for a page opened straight from a folder
+        if (location.protocol === 'file:' && config.chapters.some(function (c) { return c.geojson; })) {
+            document.addEventListener('DOMContentLoaded', function () {
+                var note = document.createElement('div');
+                note.id = 'local-file-note';
+                note.innerHTML = 'Map data can\'t load when this page is opened straight from its folder. ' +
+                    'Double-click <strong>Preview map.cmd</strong> in the same folder instead.';
+                document.body.appendChild(note);
+            });
+        }
+
+        var initLoad = true;
+        var layerTypes = {
+            'fill': ['fill-opacity'],
+            'line': ['line-opacity'],
+            'circle': ['circle-opacity', 'circle-stroke-opacity'],
+            'symbol': ['icon-opacity', 'text-opacity'],
+            'raster': ['raster-opacity'],
+            'fill-extrusion': ['fill-extrusion-opacity'],
+            'heatmap': ['heatmap-opacity']
+        }
+
+        var alignments = {
+            'left': 'lefty',
+            'center': 'centered',
+            'right': 'righty',
+            'full': 'fully'
+        }
+
+        function getLayerPaintType(layer) {
+            var layerType = map.getLayer(layer).type;
+            return layerTypes[layerType];
+        }
+
+        function setLayerOpacity(layer) {
+            var paintProps = getLayerPaintType(layer.layer);
+            paintProps.forEach(function (prop) {
+                var options = {};
+                if (layer.duration) {
+                    var transitionProp = prop + "-transition";
+                    options = { "duration": layer.duration };
+                    map.setPaintProperty(layer.layer, transitionProp, options);
+                }
+                map.setPaintProperty(layer.layer, prop, layer.opacity, options);
+            });
+        }
+
+        var story = document.getElementById('story');
+        var features = document.createElement('div');
+        features.setAttribute('id', 'features');
+
+        var header = document.createElement('div');
+
+        if (config.title) {
+            var titleText = document.createElement('h1');
+            titleText.innerText = config.title;
+            header.appendChild(titleText);
+        }
+
+        if (config.subtitle) {
+            var subtitleText = document.createElement('h2');
+            subtitleText.innerText = config.subtitle;
+            header.appendChild(subtitleText);
+        }
+
+        if (config.byline) {
+            var bylineText = document.createElement('p');
+            bylineText.innerText = config.byline;
+            header.appendChild(bylineText);
+        }
+
+        if (header.innerText.length > 0) {
+            header.classList.add(config.theme);
+            header.setAttribute('id', 'header');
+            story.appendChild(header);
+        }
+
+        config.chapters.forEach((record, idx) => {
+            var container = document.createElement('div');
+            var chapter = document.createElement('div');
+
+            if (record.tag) {
+                var tag = document.createElement('span');
+                tag.classList.add('story-tag');
+                tag.innerText = record.tag;
+                chapter.appendChild(tag);
+            }
+
+            if (record.title) {
+                var title = document.createElement('h3');
+                title.innerText = record.title;
+                chapter.appendChild(title);
+            }
+
+            if (record.role) {
+                var role = document.createElement('p');
+                role.classList.add('story-role');
+                role.innerText = record.role;
+                chapter.appendChild(role);
+            }
+
+            if (record.image) {
+                var image = new Image();
+                image.src = record.image;
+                chapter.appendChild(image);
+            }
+
+            if (record.description) {
+                var story = document.createElement('p');
+                // Line breaks typed in config.js show as line breaks on the card
+                story.innerHTML = record.description.trim().replace(/\r?\n/g, '<br>');
+                chapter.appendChild(story);
+            }
+
+            // Link preview for the published story, like the cards social media sites show
+            if (record.link && record.link.url) {
+                var link = record.link;
+                var preview = document.createElement('a');
+                preview.classList.add('link-preview');
+                preview.href = link.url;
+                preview.target = '_blank';
+                preview.rel = 'noopener';
+                if (link.image) {
+                    var thumb = new Image();
+                    thumb.src = link.image;
+                    thumb.alt = '';
+                    preview.appendChild(thumb);
+                }
+                var site = document.createElement('span');
+                site.classList.add('link-site');
+                site.innerText = link.site || new URL(link.url).hostname.replace(/^www\./, '');
+                preview.appendChild(site);
+                var linkTitle = document.createElement('span');
+                linkTitle.classList.add('link-title');
+                linkTitle.innerText = link.title || 'Read the story';
+                preview.appendChild(linkTitle);
+                if (link.description) {
+                    var linkText = document.createElement('span');
+                    linkText.classList.add('link-text');
+                    linkText.innerText = link.description;
+                    preview.appendChild(linkText);
+                }
+                chapter.appendChild(preview);
+            }
+
+            // Charts from Datawrapper or Flourish, listed in the chapter's "charts" setting.
+            // Left and right cards get a panel on the opposite side; other cards show charts inside the card.
+            if (record.charts && record.charts.length) {
+                var side = record.alignment === 'left' ? 'right' : record.alignment === 'right' ? 'left' : null;
+                var chartHolder = chapter;
+                if (side && window.innerWidth > 750) {
+                    chartHolder = document.createElement('div');
+                    chartHolder.classList.add('chart-panel', 'side-' + side, config.theme);
+                    chartHolder.dataset.chapter = record.id;
+                    chartCards[record.id] = chapter;
+                    document.body.appendChild(chartHolder);
+                    if (panelWatcher) panelWatcher.observe(chartHolder);
+                }
+                record.charts.forEach(chart => {
+                    var box = document.createElement('div');
+                    box.classList.add('chart');
+
+                    // A static picture: { image: "https://...jpg", title: "what it shows" }
+                    if (chart.image) {
+                        var picture = new Image();
+                        picture.src = chart.image;
+                        picture.alt = chart.title || 'Chart';
+                        box.appendChild(picture);
+                        chartHolder.appendChild(box);
+                        return;
+                    }
+                    if (!chart.src) return; // nothing to show
+
+                    // An interactive embed: { src: "https://datawrapper...", height: 450 }
+                    var frame = document.createElement('iframe');
+                    frame.src = lightModeUrl(chart.src);
+                    frame.title = chart.title || 'Chart';
+                    frame.style.height = (chart.height || 400) + 'px';
+                    frame.setAttribute('scrolling', 'no');
+                    box.appendChild(frame);
+                    chartHolder.appendChild(box);
+                });
+            }
+
+            container.setAttribute('id', record.id);
+            container.classList.add('step');
+            if (idx === 0) {
+                container.classList.add('active');
+            }
+
+            chapter.classList.add(config.theme);
+            container.appendChild(chapter);
+            container.classList.add(alignments[record.alignment] || 'centered');
+            if (record.hidden) {
+                container.classList.add('hidden');
+            }
+            features.appendChild(container);
+        });
+
+        story.appendChild(features);
+
+        var footer = document.createElement('div');
+
+        if (config.footer) {
+            var footerText = document.createElement('p');
+            footerText.innerHTML = config.footer;
+            footer.appendChild(footerText);
+        }
+
+        if (footer.innerText.length > 0) {
+            footer.classList.add(config.theme);
+            footer.setAttribute('id', 'footer');
+            story.appendChild(footer);
+        }
+
+        mapboxgl.accessToken = config.accessToken;
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: config.style,
+            center: config.chapters[0].location.center,
+            zoom: config.chapters[0].location.zoom,
+            bearing: config.chapters[0].location.bearing,
+            pitch: config.chapters[0].location.pitch,
+            interactive: false,
+            projection: config.projection,
+            // When previewing on this computer, always get the newest published Studio style
+            // (browsers otherwise keep an old copy for up to 30 minutes). The live site is unaffected.
+            transformRequest: function (url, resourceType) {
+                var local = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+                if (local && resourceType === 'Style' && url.indexOf('/styles/v1/') !== -1) {
+                    return { url: url + (url.indexOf('?') === -1 ? '?' : '&') + 'fresh=true' };
+                }
+                return { url: url };
+            }
+        });
+
+        // Create a inset map if enabled in config.js
+        if (config.inset) {
+            map.addControl(
+                new GlobeMinimap({ ...config.insetOptions }),
+                config.insetPosition
+            );
+        }
+
+        if (config.showMarkers) {
+            var marker = new mapboxgl.Marker({ color: config.markerColor });
+            marker.setLngLat(config.chapters[0].location.center).addTo(map);
+        }
+
+        // instantiate the scrollama
+        var scroller = scrollama();
+
+
+        map.on("load", function () {
+            if (config.use3dTerrain) {
+                map.addSource('mapbox-dem', {
+                    'type': 'raster-dem',
+                    'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                    'tileSize': 512,
+                    'maxzoom': 14
+                });
+                // add the DEM source as a terrain layer with exaggerated height
+                map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+                // add a sky layer that will show when the map is highly pitched
+                map.addLayer({
+                    'id': 'sky',
+                    'type': 'sky',
+                    'paint': {
+                        'sky-type': 'atmosphere',
+                        'sky-atmosphere-sun': [0.0, 0.0],
+                        'sky-atmosphere-sun-intensity': 15
+                    }
+                });
+            };
+
+            // Add each chapter's GeoJSON map data (hidden until its chapter)
+            config.chapters.forEach(function (chapter) {
+                if (chapter.geojson) addChapterData(chapter);
+            });
+
+            // setup the instance, pass callback functions
+            scroller
+                .setup({
+                    step: '.step',
+                    offset: 0.5,
+                    progress: true
+                })
+                .onStepEnter(async response => {
+                    var current_chapter = config.chapters.findIndex(chap => chap.id === response.element.id);
+                    var chapter = config.chapters[current_chapter];
+
+                    response.element.classList.add('active');
+                    // Fly the camera: zoom out, pan across, zoom back in. "essential" keeps the flight
+                    // even when the computer asks for reduced animations (otherwise the map just jumps).
+                    // speed and curve can be set per chapter in its location; lower speed = slower flight,
+                    // higher curve = zooms out further on the way.
+                    map[chapter.mapAnimation || 'flyTo'](Object.assign({
+                        speed: config.flySpeed || 0.6,
+                        curve: config.flyCurve || 1.6,
+                        essential: true
+                    }, chapter.location));
+
+                    if (config.showMarkers) {
+                        marker.setLngLat(chapter.location.center);
+                    }
+                    if (chapter.onChapterEnter && chapter.onChapterEnter.length > 0) {
+                        chapter.onChapterEnter.forEach(setLayerOpacity);
+                    }
+                    fadeChapterData(chapter, true);
+                    showCharts(chapter.id, true);
+                    if (chapter.callback) {
+                        window[chapter.callback]();
+                    }
+                    if (chapter.rotateAnimation) {
+                        map.once('moveend', () => {
+                            const rotateNumber = map.getBearing();
+                            map.rotateTo(rotateNumber + 180, {
+                                duration: 30000, easing: function (t) {
+                                    return t;
+                                }
+                            });
+                        });
+                    }
+                    if (config.auto) {
+                        var next_chapter = (current_chapter + 1) % config.chapters.length;
+                        map.once('moveend', () => {
+                            document.querySelectorAll('[data-scrollama-index="' + next_chapter.toString() + '"]')[0].scrollIntoView();
+                        });
+                    }
+                })
+                .onStepExit(response => {
+                    var chapter = config.chapters.find(chap => chap.id === response.element.id);
+                    response.element.classList.remove('active');
+                    if (chapter.onChapterExit && chapter.onChapterExit.length > 0) {
+                        chapter.onChapterExit.forEach(setLayerOpacity);
+                    }
+                    fadeChapterData(chapter, false);
+                    showCharts(chapter.id, false);
+                });
+
+
+            if (config.auto) {
+                document.querySelectorAll('[data-scrollama-index="0"]')[0].scrollIntoView();
+            }
+        });    
+
+    </script>
+
+</body>
+
+</html>
