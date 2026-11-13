@@ -137,7 +137,7 @@ Along with other publications, The Denver Gazette received the data under a two-
             alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
             // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
-            tag: "Reporting + graphics",
+            tag: "Reporting + data",
             title: "The sorry state of Colorado's rural roads",
             // role: who did what, shown under the headline
             role: "Story, data analysis and graphics by Michael Braithwaite",
