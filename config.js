@@ -34,6 +34,8 @@ Michael was selected for the Colorado Press Association's Rising Star Award in 2
         links: [
             { label: "LinkedIn", url: "https://www.linkedin.com/in/mbrait/" },   // paste your profile address between the quotes
 		{ label: "Twitter/X", url: "https://x.com/mbraitmedia" },   // paste your profile address between the quotes
+		{ label: "GitHub", url: "https://github.com/mjbraithwaite" },   // paste your profile address between the quotes
+
         ],
         resume: "./assets/Resume.pdf",
         resumeButton: "Resume",
@@ -58,7 +60,7 @@ Once the data collection was complete, Michael compiled and analyzed the data to
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
-                url: "https://www.denvergazette.com/2026/11/05/denver-waymo-uber-lyft-pricing/",
+                url: "https://www.denvergazette.com/outtherecolorado/2026/11/05/denver-waymo-uber-lyft-pricing/",
                 image: "https://www.denvergazette.com/wp-content/uploads/2026/11/C82A9857_w-scaled-e1793685241810.jpg",
                 title: "Is a Denver Waymo ride as cheap as Uber or Lyft? It’s not far off",
                 description: "Waymo’s robotaxis have become a running joke in the Mile High City, but they’re also becoming an increasingly cost-effective transportation option when compared to competitors Uber and Lyft.",
@@ -107,7 +109,7 @@ Along with other publications, The Denver Gazette received the data under a two-
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
-                url: "https://www.denvergazette.com/2026/08/19/colorado-math-scores-hit-record-high-as-denver-area-districts-show-gains/",
+                url: "https://www.denvergazette.com/outtherecolorado/2026/08/19/colorado-math-scores-hit-record-high-as-denver-area-districts-show-gains/",
                 image: "https://www.denvergazette.com/wp-content/uploads/2026/08/080726-dg-news-School-2.jpg",
                 title: "Colorado math scores hit record high as Denver-area districts show gains",
                 description: `Math emerged as a bright spot in Colorado’s latest standardized test results, with students posting record scores in a subject where they have historically lagged behind English language arts.`,
@@ -149,7 +151,7 @@ The story won first place for Best Data Journalism Reporting at the 2026 Colorad
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
-                url: "https://www.denvergazette.com/2025/08/07/rural-reckoning-colorado-highways-are-crumbling-and-so-is-the-funding-to-fix-them/",
+                url: "https://www.denvergazette.com/outtherecolorado/2025/08/07/rural-reckoning-colorado-highways-are-crumbling-and-so-is-the-funding-to-fix-them/",
                 image: "https://www.denvergazette.com/wp-content/uploads/2026/01/b0cf3a2da1ea09a52ed75eb8ab3f4df3-scaled.jpg?resize=2048,1534",
                 title: "Colorado highways are crumbling, and so is the funding to fix them",
                 description: `Colorado highways across the state are falling into disarray. Gas tax revenue to fund upkeep has flattened while the cost to maintain and build roads has soared.`,
@@ -192,7 +194,7 @@ This was Michael's first time creating custom geospatial maps on deadline.`,
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
-                url: "https://www.denvergazette.com/2026/10/07/ballot-issue-for-passenger-rail-on-more-ballots-than-it-should-be/",
+                url: "https://www.denvergazette.com/outtherecolorado/2026/10/07/ballot-issue-for-passenger-rail-on-more-ballots-than-it-should-be/",
                 image: "https://www.denvergazette.com/wp-content/uploads/2026/10/Train-Name_-CoCo-e1791049989546.jpeg",
                 title: "800,000 voters wrongly sent ballots with passenger rail tax question",
                 description: "County clerks in at least four metro Denver counties are scrambling to deal with the immediate confusion — and other potential ramifications — in the aftermath of some 800,000 voters receiving ballots with a sales tax hike question they shouldn’t be asked.",
@@ -230,7 +232,7 @@ Using public data on the agency's website, Michael showed just how much the Free
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
-                url: "https://www.denvergazette.com/2026/07/14/rtd-to-consider-ending-16th-street-freeride-service/",
+                url: "https://www.denvergazette.com/outtherecolorado/2026/07/14/rtd-to-consider-ending-16th-street-freeride-service/",
                 image: "https://hub.gazette.com/wp-content/uploads/2025/09/Screenshot-2025-09-11-at-12.40.46%E2%80%AFPM-1024x551.png",
                 title: "RTD to consider ending 16th Street FreeRide service",
                 description: `Nine months after 16th Street celebrated its full reopening, transit officials are weighing the fate of one of the promenade’s most notable features — the FreeRide.`,
