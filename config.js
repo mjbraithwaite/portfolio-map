@@ -52,7 +52,7 @@ Once the data collection was complete, Michael compiled and analyzed the data to
 
             ],
             location: {
-                center: [-104.965, 39.737],
+                center: [-104.9875, 39.745783],
                 zoom: 11.3,
                 pitch: 0,   // 0 = straight down; higher numbers tilt the map
                 bearing: 0  // 0 = north at the top
@@ -63,10 +63,14 @@ Once the data collection was complete, Michael compiled and analyzed the data to
             // Layers from your Studio style. "layer" must match the layer name in Studio exactly.
             // Enter: fade it in over 1 second. Exit: hide it again.
             onChapterEnter: [
-                { layer: "waymoroutes", opacity: 1, duration: 1000 }
+                { layer: "waymoroutes", opacity: 1, duration: 1000 },
+                { layer: "waymostops", opacity: 1, duration: 1000 },
+                { layer: "waymolabels", opacity: 1, duration: 1000 }
             ],
             onChapterExit: [
-                { layer: "waymoroutes", opacity: 0 }
+                { layer: "waymoroutes", opacity: 0 },
+                { layer: "waymostops", opacity: 0 },
+                { layer: "waymolabels", opacity: 0 }
             ]
         },
        {
@@ -139,8 +143,8 @@ The story won first place for best data journalism reporting at the 2026 Colorad
 
             ],
             location: {
-                center: [-103.1465784, 40.6134603],
-                zoom: 8,
+                center: [-103.25, 40.6134603],
+                zoom: 9.5,
                 pitch: 0,   // 0 = straight down; higher numbers tilt the map
                 bearing: 0  // 0 = north at the top
             },
@@ -176,8 +180,8 @@ This was Michael's first time creating custom geospatial maps on deadline.`,
                 site: "The Denver Gazette"
             },
             location: {
-                center: [-104.4263601, 39.331967],
-                zoom: 6,
+                center: [-104.2, 39],
+                zoom: 6.5,
                 pitch: 0,   // 0 = straight down; higher numbers tilt the map
                 bearing: 0  // 0 = north at the top
             },
