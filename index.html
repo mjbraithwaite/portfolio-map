@@ -47,8 +47,71 @@
         }
 
         #header h1 { font-size: 24px; padding-top: 2vh; }
-        #header h2 { font-size: 15px; font-weight: normal; padding-bottom: 2vh; }
+        #header h2 { font-size: 12px; font-weight: normal; padding-bottom: 2vh; opacity: .7; }
         #header p { font-size: 13px; }
+
+        /* "See my work" glides down the page instead of jumping */
+        html { scroll-behavior: smooth; }
+
+        /* About section at the top: photo beside name, bio, contact and buttons */
+        .about {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 5vh 24px 2vh;
+            box-sizing: border-box;
+        }
+
+        .about-photo {
+            flex: none;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, .25);
+        }
+
+        .about-text { min-width: 0; text-align: left; }
+        #header .about h1 { padding: 0; text-align: left; font-size: 28px; line-height: 1.2; }
+        #header .about p { padding: 0; text-align: left; }
+        #header .about-bio { font-size: 15px; line-height: 1.55; margin: 12px 0 0; }
+        #header .about-contact { font-size: 14px; margin: 12px 0 0; }
+        .about-contact .dot { margin: 0 8px; opacity: .5; }
+
+        .about-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        a.about-button,
+        a.about-button:visited {
+            display: inline-block;
+            padding: 9px 18px;
+            border-radius: 999px;
+            border: 1px solid currentColor;
+            color: inherit;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        a.about-button:hover { opacity: .75; }
+        a.about-button.primary,
+        a.about-button.primary:visited { background: #222; border-color: #222; color: #fff; }
+        .dark a.about-button.primary { background: #fff; border-color: #fff; color: #222; }
+
+        @media (max-width: 750px) {
+            .about { flex-direction: column; text-align: center; gap: 18px; }
+            .about-text { text-align: center; }
+            #header .about h1,
+            #header .about p { text-align: center; }
+            .about-buttons { justify-content: center; }
+            .about-photo { width: 140px; height: 140px; }
+        }
 
         #footer {
             width: 100%;
@@ -446,6 +509,11 @@
         }
 
         function setLayerOpacity(layer) {
+            // Skip names that aren't in the published Studio style yet, instead of stopping the page
+            if (!map.getLayer(layer.layer)) {
+                console.warn('Layer "' + layer.layer + '" is not in your Studio style (check the name, then Publish).');
+                return;
+            }
             var paintProps = getLayerPaintType(layer.layer);
             paintProps.forEach(function (prop) {
                 var options = {};
@@ -463,12 +531,72 @@
         features.setAttribute('id', 'features');
 
         var header = document.createElement('div');
+        if (config.title) document.title = config.title; // the browser tab's name
+
+        // About section: photo, name, bio, contact links, resume and "see my work" buttons
+        var about = config.about || {};
+        var aboutBox = document.createElement('div');
+        aboutBox.classList.add('about');
+
+        if (about.photo) {
+            var photo = new Image();
+            photo.src = about.photo;
+            photo.alt = about.photoAlt || 'Photo of ' + (about.name || 'me');
+            photo.classList.add('about-photo');
+            photo.onerror = function () { photo.remove(); }; // no broken image if the file isn't there yet
+            aboutBox.appendChild(photo);
+        }
+
+        var aboutText = document.createElement('div');
+        aboutText.classList.add('about-text');
+        aboutBox.appendChild(aboutText);
 
         if (config.title) {
             var titleText = document.createElement('h1');
             titleText.innerText = config.title;
-            header.appendChild(titleText);
+            aboutText.appendChild(titleText);
         }
+
+        if (about.bio) {
+            var bio = document.createElement('p');
+            bio.classList.add('about-bio');
+            bio.innerHTML = about.bio.trim().replace(/\r?\n/g, '<br>');
+            aboutText.appendChild(bio);
+        }
+
+        // Contact line: email, phone and any other links, separated by dots
+        var contactBits = [];
+        if (about.email) contactBits.push('<a href="mailto:' + about.email + '">' + about.email + '</a>');
+        if (about.phone) contactBits.push('<span>' + about.phone + '</span>');
+        (about.links || []).forEach(function (link) {
+            if (link.url) contactBits.push('<a href="' + link.url + '" target="_blank" rel="noopener">' + (link.label || link.url) + '</a>');
+        });
+        if (contactBits.length) {
+            var contact = document.createElement('p');
+            contact.classList.add('about-contact');
+            contact.innerHTML = contactBits.join('<span class="dot">·</span>');
+            aboutText.appendChild(contact);
+        }
+
+        var buttons = document.createElement('div');
+        buttons.classList.add('about-buttons');
+        if (about.resume) {
+            var resume = document.createElement('a');
+            resume.href = about.resume;
+            resume.target = '_blank';
+            resume.rel = 'noopener';
+            resume.classList.add('about-button');
+            resume.innerText = about.resumeButton || 'Resume';
+            buttons.appendChild(resume);
+        }
+        var toWork = document.createElement('a');
+        toWork.href = '#features'; // jumps (smoothly) down to the first story
+        toWork.classList.add('about-button', 'primary');
+        toWork.innerText = (about.workButton || 'See my work') + ' ↓';
+        buttons.appendChild(toWork);
+        aboutText.appendChild(buttons);
+
+        header.appendChild(aboutBox);
 
         if (config.subtitle) {
             var subtitleText = document.createElement('h2');

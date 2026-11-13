@@ -18,8 +18,27 @@ var config = {
     auto: false,
     flySpeed: 0.6, // how fast the camera flies between stories (lower = slower)
     flyCurve: 1.6, // how far it zooms out mid-flight (higher = further)
-    title: "Michael Braithwaite's data reporting portfolio", // double quotes, because the text contains an apostrophe
+    title: "Michael Braithwaite's portfolio", // double quotes, because the text contains an apostrophe
     subtitle: "This Mapbox storymap was customized using Claude Code. Everything else featured is entirely human created.",
+    // About you: shown at the top of the page, above your stories.
+    // Put your photo and resume in the "assets" folder (next to index.html) with these exact file names,
+    // or change the names here to match. Leave anything blank ("") to hide it.
+    about: {
+        photo: "./assets/Headshot.jpg",
+        photoAlt: "Michael Braithwaite",
+        bio: `Michael is a journalist specializing in data reporting and creating interactive maps. His work has covered several beats, including crime, courts, transportation and education, and he's contributed to the newsroom's projects team.
+
+Michael was selected for the Colorado Press Association's Rising Star Award in 2026 and won first place in the Best Data Journalism Reporting category as well.`,
+        email: "michaeljbrait@gmail.com",   // e.g. "name@example.com"
+        phone: "",   // e.g. "(555) 555-5555"
+        links: [
+            { label: "LinkedIn", url: "https://www.linkedin.com/in/mbrait/" },   // paste your profile address between the quotes
+		{ label: "Twitter", url: "https://x.com/mbraitmedia" },   // paste your profile address between the quotes
+        ],
+        resume: "./assets/Resume.pdf",
+        resumeButton: "Resume",
+        workButton: "See Michael's work"
+    },
     footer: `Created using <a href="https://github.com/mapbox/storytelling" target="_blank">Mapbox Storytelling</a> template.`,
     chapters: [
         {
