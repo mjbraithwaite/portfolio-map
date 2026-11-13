@@ -137,7 +137,7 @@ Along with other publications, we received the data under a two-day embargo. In 
             alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
             // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
-            tag: "Reporting + graphics",
+            tag: "Reporting + data",
             title: "The sorry state of Colorado's rural roads",
             // role: who did what, shown under the headline
             role: "Story and graphics by Michael Braithwaite",
@@ -223,7 +223,7 @@ This was Michael's first time creating custom geospatial maps on deadline.`,
             tag: "Reporting + data",
             title: "Illustrating RTD's reliance on the FreeRide for ridership",
             // role: who did what, shown under the headline
-            role: "Story and data by Michael Braithwaite",
+            role: "Story and graphics by Michael Braithwaite",
             description: `This was a news story that broke after a pre-meeting agenda showed that Denver's Regional Transportation District, which services the public buses and light rail, was considering cutting the city's free bus through its newly-reconstructed downtown pedestrian promenade.
 
 Using public data on the agency's website, Michael showed just how much FreeRide outpaces the RTD's other bus routes in ridership, a metric the agency has struggled to bring back up since the COVID-19 pandemic.`,
