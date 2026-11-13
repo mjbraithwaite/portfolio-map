@@ -26,14 +26,14 @@ var config = {
     about: {
         photo: "./assets/Headshot.jpg",
         photoAlt: "Michael Braithwaite",
-        bio: `Michael is a journalist specializing in data reporting and creating interactive maps. His work has covered several beats, including crime, courts, transportation and education, and he's contributed to the newsroom's projects team.
+        bio: `Michael is a journalist specializing in data reporting and creating interactive maps. His work for The Denver Gazette has covered several beats, including crime, courts, transportation and education, and he's contributed to the newsroom's projects team.
 
 Michael was selected for the Colorado Press Association's Rising Star Award in 2026 and won first place in the Best Data Journalism Reporting category as well.`,
         email: "michaeljbrait@gmail.com",   // e.g. "name@example.com"
         phone: "",   // e.g. "(555) 555-5555"
         links: [
             { label: "LinkedIn", url: "https://www.linkedin.com/in/mbrait/" },   // paste your profile address between the quotes
-		{ label: "Twitter", url: "https://x.com/mbraitmedia" },   // paste your profile address between the quotes
+		{ label: "Twitter/X", url: "https://x.com/mbraitmedia" },   // paste your profile address between the quotes
         ],
         resume: "./assets/Resume.pdf",
         resumeButton: "Resume",
@@ -49,7 +49,7 @@ Michael was selected for the Colorado Press Association's Rising Star Award in 2
             tag: "Reporting + data + mapping",
             title: "Riding Waymo vs. Uber or Lyft",
             // role: who did what, shown under the headline
-            role: "Story and graphics by Michael Braithwaite",
+            role: "Story, data analysis and graphics by Michael Braithwaite",
             description: `A price analysis of riding Waymo in Denver versus riding Uber or Lyft.
 
 Over the course of a week, multiple Denver Gazette staffers recorded the quoted price for Waymo, Uber and Lyft rides across different routes and at different times of the day. 
@@ -100,10 +100,10 @@ Once the data collection was complete, Michael compiled and analyzed the data to
             tag: "Data",
             title: "Analyzing Colorado's 2026 CMAS scores",
             // role: who did what, shown under the headline
-            role: "Story by Nico Brambila; graphics by Michael Braithwaite",
-            description: `This story analyzed the yearly release of Colorado's Colorado Measures of Academic Success (CMAS) standardized test scores for all public school districts throughout the state.
+            role: "Story by Nico Brambila; data analysis and graphics by Michael Braithwaite",
+            description: `This story analyzed the yearly release of the Colorado Measures of Academic Success (CMAS) standardized test scores for all public school districts throughout the state.
 
-Along with other publications, we received the data under a two-day embargo. In that time, Michael isolated statewide and local trends, and created several graphics illustrating them that published within the story immediately when the embargo lifted.`,
+Along with other publications, The Denver Gazette received the data under a two-day embargo. In that time, Michael isolated statewide and local trends, and created several graphics illustrating them, which ran in the story as soon as the embargo lifted.`,
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
@@ -116,7 +116,7 @@ Along with other publications, we received the data under a two-day embargo. In 
             // Charts shown beside this card, top to bottom. Remove the // to use a line.
             // height is in pixels (Datawrapper charts adjust their own height; Flourish ones keep it).
             charts: [
-                { src: "https://public.flourish.studio/visualisation/30012587/", height: 450, title: "Short description of the chart" },
+                { src: "https://flo.uri.sh/visualisation/30012587/embed", height: 600, title: "Short description of the chart" },
 
             ],
             location: {
@@ -137,15 +137,15 @@ Along with other publications, we received the data under a two-day embargo. In 
             alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
             // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
-            tag: "Reporting + data",
+            tag: "Reporting + graphics",
             title: "The sorry state of Colorado's rural roads",
             // role: who did what, shown under the headline
-            role: "Story and graphics by Michael Braithwaite",
+            role: "Story, data analysis and graphics by Michael Braithwaite",
             description: `One of Michael's first data reporting stories, this one explored how Colorado's rural highways have fallen into disrepair due to a lack of state funds to maintain and repair them.
 
-Michael drove out to Sterling, a city on Colorado's Eastern Plains, to spend a day with state Sen. Byron Pelton, who spent six hours giving Michael a first-hand experience on the worn-down state highway network east of Colorado's major metropolitan areas.
+Michael drove out to Sterling, a city on Colorado's Eastern Plains, to spend a day with state Sen. Byron Pelton, who gave Michael a six-hour, firsthand look at the worn-down state highway network east of Colorado's major metropolitan areas.
 
-The story won first place for best data journalism reporting at the 2026 Colorado Press Association Better News Contest.`,
+The story won first place for Best Data Journalism Reporting at the 2026 Colorado Press Association Better News Contest.`,
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
@@ -179,14 +179,14 @@ The story won first place for best data journalism reporting at the 2026 Colorad
             hidden: false,
             // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
             tag: "Mapping",
-            title: "The Front Range Passenger Rail District changes",
+            title: "Mapping the Front Range Passenger Rail District's new boundaries",
             // role: who did what, shown under the headline
             role: "Story by Scott Weiser; mapping by Michael Braithwaite",
-            description: `During the 2026 midterm election, Colorado voters in select areas decided the fate of a sales and use tax increase to fund passenger rail service development along the state's Front Range.
+            description: `During the 2026 midterm elections, Colorado voters in select areas decided the fate of a sales and use tax increase to fund passenger rail service development along the state's Front Range.
 
-The measure had been in consideration for years, and had previously included a far larger tax district than the one that was signed into law months before Election Day.
+The measure had been under consideration for years, and had previously included a far larger tax district than the one that was signed into law months before Election Day.
 
-But a breakdown in communication between the passenger rail authority and several county clerks resulting in some voters outside the revised district still seeing the issue on their 2026 ballots, prompting a two-day scramble to determine how to ensure that only the votes from those inside the new district would count.
+But a breakdown in communication between the passenger rail authority and several county clerks resulted in some voters outside the revised district still seeing the issue on their 2026 ballots, prompting a two-day scramble to determine how to ensure that only the votes from those inside the new district boundaries would count.
 
 This was Michael's first time creating custom geospatial maps on deadline.`,
             // Link preview for the published story, shown under the text.
@@ -223,10 +223,10 @@ This was Michael's first time creating custom geospatial maps on deadline.`,
             tag: "Reporting + data",
             title: "Illustrating RTD's reliance on the FreeRide for ridership",
             // role: who did what, shown under the headline
-            role: "Story and graphics by Michael Braithwaite",
-            description: `This was a news story that broke after a pre-meeting agenda showed that Denver's Regional Transportation District, which services the public buses and light rail, was considering cutting the city's free bus through its newly-reconstructed downtown pedestrian promenade.
+            role: "Story, data analysis and graphics by Michael Braithwaite",
+            description: `This story broke after a pre-meeting agenda showed that Denver's Regional Transportation District, which runs the city's the public buses and light rail, was considering cutting the free bus service through downtown's newly reconstructed pedestrian promenade.
 
-Using public data on the agency's website, Michael showed just how much FreeRide outpaces the RTD's other bus routes in ridership, a metric the agency has struggled to bring back up since the COVID-19 pandemic.`,
+Using public data on the agency's website, Michael showed just how much the FreeRide outpaces the RTD's other bus routes in ridership, a metric the agency has struggled to bring back up since the COVID-19 pandemic.`,
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {

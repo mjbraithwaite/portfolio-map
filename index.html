@@ -381,12 +381,14 @@
         function placeSoon() {
             if (placing) return;
             placing = true;
-            requestAnimationFrame(function () { placing = false; placeChartPanels(); });
+            setTimeout(function () { placing = false; placeChartPanels(); }, 50);
         }
         window.addEventListener('resize', placeSoon);
         window.addEventListener('load', placeSoon);
         // Datawrapper charts change height as they load; re-place everything when a panel's size changes
         var panelWatcher = window.ResizeObserver ? new ResizeObserver(placeSoon) : null;
+        // Story cards grow when their link-preview photos load, which moves later cards down; re-align then too
+        if (panelWatcher) panelWatcher.observe(document.getElementById('story'));
 
         // ---------- Map data (GeoJSON) for each chapter ----------
         // Each chapter with a "geojson" setting gets up to four layers: filled shapes,
@@ -793,7 +795,20 @@
         var scroller = scrollama();
 
 
-        map.on("load", function () {
+        // Start the stories once the map style is ready. Normally that's the map's "load" event, but if
+        // some map data fails (for example Mapbox refuses an uploaded layer), "load" never comes. So the
+        // stories also start when the style itself has loaded, or after 6 seconds at the latest.
+        var storyStarted = false;
+        function startStory() {
+            if (storyStarted) return;
+            storyStarted = true;
+            setUpStory();
+        }
+        map.on("load", startStory);
+        map.on("style.load", function () { setTimeout(startStory, 1500); });
+        setTimeout(startStory, 6000);
+
+        function setUpStory() {
             if (config.use3dTerrain) {
                 map.addSource('mapbox-dem', {
                     'type': 'raster-dem',
@@ -885,7 +900,7 @@
             if (config.auto) {
                 document.querySelectorAll('[data-scrollama-index="0"]')[0].scrollIntoView();
             }
-        });    
+        }
 
     </script>
 
