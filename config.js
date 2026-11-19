@@ -43,7 +43,7 @@ Michael was selected for the Colorado Press Association's Rising Star Award in 2
     },
     footer: `Created using <a href="https://github.com/mapbox/storytelling" target="_blank">Mapbox Storytelling</a> template.`,
     chapters: [
-        {
+  {
             id: "waymo",
             alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
@@ -69,7 +69,7 @@ Once the data collection was complete, Michael compiled and analyzed the data to
             // Charts shown beside this card, top to bottom. Remove the // to use a line.
             // height is in pixels (Datawrapper charts adjust their own height; Flourish ones keep it).
             charts: [
-                { src: "https://datawrapper.dwcdn.net/1dYU5/2/", height: 450, title: "Short description of the chart" },
+                { src: "https://datawrapper.dwcdn.net/1dYU5/2/", height: 450, title: "Range of Waymo, Uber and Lyft prices measured" },
 
             ],
             location: {
@@ -94,36 +94,45 @@ Once the data collection was complete, Michael compiled and analyzed the data to
                 { layer: "waymolabels", opacity: 0 }
             ]
         },
-       {
-            id: "cmas",
+ {
+            id: "watermap",
             alignment: "right", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
             // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
-            tag: "Data",
-            title: "Analyzing Colorado's 2026 CMAS scores",
+            tag: "Data + mapping",
+            title: "Mapping Denver-area water resources",
             // role: who did what, shown under the headline
-            role: "Story by Nico Brambila; data analysis and graphics by Michael Braithwaite",
-            description: `This story analyzed the yearly release of the Colorado Measures of Academic Success (CMAS) standardized test scores for all public school districts throughout the state.
+            role: "Data analysis and mapping by Michael Braithwaite",
+            description: `This map was created as part of a series highlighting the impacts of Colorado's severe drought conditions in the spring and summer of 2026.
 
-Along with other publications, The Denver Gazette received the data under a two-day embargo. In that time, Michael isolated statewide and local trends, and created several graphics illustrating them, which ran in the story as soon as the embargo lifted.`,
+After reaching out to municipal water providers around the Denver area and requesting their water portfolios — the list of sources they draw water from — Michael used attribute and spatial joins, as well as dissolve and other operations within ArcGIS, to combine that data with three other datasets: USGS streams and waterbodies, state water structure data and state gauge stations.
+
+The final project resulted in an interactive map that connected eight Denver-area municipal water providers to nearly 250 water structures and 600 USGS features, and showed recent water levels and flows at 19 gauge stations. Readers can use their address to find their municipal provider and see where it gets its water from.
+
+This was Michael's first major GIS project, with static images used for gauge charts given the limitations of ArcGIS Experience Builder. Charts are snapshots as of June 2026.`,
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
-            link: {
-                url: "https://www.denvergazette.com/outtherecolorado/2026/08/19/colorado-math-scores-hit-record-high-as-denver-area-districts-show-gains/",
-                image: "https://www.denvergazette.com/wp-content/uploads/2026/08/080726-dg-news-School-2.jpg",
-                title: "Colorado math scores hit record high as Denver-area districts show gains",
-                description: `Math emerged as a bright spot in Colorado’s latest standardized test results, with students posting record scores in a subject where they have historically lagged behind English language arts.`,
-                site: "The Denver Gazette"
-            },
+            // Two link cards: list them inside [ ], separated by a comma
+            link: [
+                {
+                    url: "https://experience.arcgis.com/experience/7a9251a6f9ea49acbdfa2e90d017160a/",
+                    image: "./assets/watermapphoto.png",
+                    title: "Explore the interactive map",
+                },
+                {
+                    url: "https://www.denvergazette.com/2026/06/22/the-denver-gazettes-municipal-water-provider-map/",
+                    image: "https://www.denvergazette.com/wp-content/uploads/2026/06/040926-dg-news-Lake-9.jpg",
+                    title: "The Denver Gazette’s municipal water provider map",
+                    description: `In conjunction with its 2026 drought coverage, the Denver Gazette created an interactive map to show where Denver-area water providers source their water from — and how much those waterbodies have been impacted by the lack of snowfall and overall precipitation through the first half of the year.`,
+                    site: "The Denver Gazette"
+                }
+            ],
             // Charts shown beside this card, top to bottom. Remove the // to use a line.
             // height is in pixels (Datawrapper charts adjust their own height; Flourish ones keep it).
-            charts: [
-                { src: "https://flo.uri.sh/visualisation/30012587/embed", height: 600, title: "Short description of the chart" },
-
-            ],
+            charts: [                            ],
             location: {
-                center: [-104.8388299, 39.0965125],
-                zoom: 5,
+                center: [-104.8388299, 39.6465125],
+                zoom: 8,
                 pitch: 0,   // 0 = straight down; higher numbers tilt the map
                 bearing: 0  // 0 = north at the top
             },
@@ -131,10 +140,18 @@ Along with other publications, The Denver Gazette received the data under a two-
             mapAnimation: "flyTo",
             rotateAnimation: false,
             callback: "",
-            onChapterEnter: [],
-            onChapterExit: []
+            // Layers from your Studio style. "layer" must match the layer name in Studio exactly.
+            // Enter: fade it in over 1 second. Exit: hide it again.
+            onChapterEnter: [
+                { layer: "flowlinemunqchop", opacity: 1, duration: 1000 },
+                { layer: "areabodymunqchop", opacity: 1, duration: 1000 },
+            ],
+            onChapterExit: [
+                { layer: "flowlinemunqchop", opacity: 0 },
+                { layer: "areabodymunqchop", opacity: 0 },
+            ]
         },
-            {
+           {
             id: "badroads",
             alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
@@ -160,7 +177,7 @@ The story won first place for Best Data Journalism Reporting at the 2026 Colorad
             // Charts shown beside this card, top to bottom. Remove the // to use a line.
             // height is in pixels (Datawrapper charts adjust their own height; Flourish ones keep it).
             charts: [
-                { image: "https://www.denvergazette.com/wp-content/uploads/2026/01/bee37ad8f67bb2da4e9eeadcbd2effac.jpg?resize=1536,924"},
+                { image: "https://www.denvergazette.com/wp-content/uploads/2026/01/bee37ad8f67bb2da4e9eeadcbd2effac.jpg?resize=1536,924", title: "Colorado private vehicle registrations vs. motor fuel tax income since 2002"},
 
             ],
             location: {
@@ -190,7 +207,7 @@ The measure had been under consideration for years, and had previously included 
 
 But a breakdown in communication between the passenger rail authority and several county clerks resulted in some voters outside the revised district still seeing the issue on their 2026 ballots, prompting a two-day scramble to determine how to ensure that only the votes from those inside the new district boundaries would count.
 
-This was Michael's first time creating custom geospatial maps on deadline.`,
+After the story broke, Michael didn't have a GeoJSON file of the original map, but found in the previous legislation that it was based on an economic district. Using that district map, as well as the join, clip and dissolve operations in QGIS, Michael illustrated the size difference between the two districts in under four hours while on deadline. Michael and his editor then checked the map against the PDF version provided by the district and found it to be an exact match.`,
             // Link preview for the published story, shown under the text.
             // url is required; image, title, description and site fill in the card like a social media share.
             link: {
@@ -217,16 +234,56 @@ This was Michael's first time creating custom geospatial maps on deadline.`,
                 { layer: "frprboundary", opacity: 0 }
             ]
         },
+{
+            id: "cmas",
+            alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
+            hidden: false,
+            // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
+            tag: "Data",
+            title: "Analyzing Colorado's 2026 CMAS scores",
+            // role: who did what, shown under the headline
+            role: "Story by Nico Brambila; data analysis and graphics by Michael Braithwaite",
+            description: `This story analyzed the yearly release of the Colorado Measures of Academic Success (CMAS) standardized test scores for all public school districts throughout the state.
+
+Along with other publications, The Denver Gazette received the data under a two-day embargo. In that time, Michael isolated statewide and local trends using lookup functions and pivot tables, and created several graphics illustrating the test score data, which ran in the story as soon as the embargo lifted.`,
+            // Link preview for the published story, shown under the text.
+            // url is required; image, title, description and site fill in the card like a social media share.
+            link: {
+                url: "https://www.denvergazette.com/outtherecolorado/2026/08/19/colorado-math-scores-hit-record-high-as-denver-area-districts-show-gains/",
+                image: "https://www.denvergazette.com/wp-content/uploads/2026/08/080726-dg-news-School-2.jpg",
+                title: "Colorado math scores hit record high as Denver-area districts show gains",
+                description: `Math emerged as a bright spot in Colorado’s latest standardized test results, with students posting record scores in a subject where they have historically lagged behind English language arts.`,
+                site: "The Denver Gazette"
+            },
+            // Charts shown beside this card, top to bottom. Remove the // to use a line.
+            // height is in pixels (Datawrapper charts adjust their own height; Flourish ones keep it).
+            charts: [
+                { src: "https://flo.uri.sh/visualisation/30012587/embed", height: 600, title: "Colorado standardized test scores by public school district" },
+
+            ],
+            location: {
+                center: [-105.5388299, 39.0965125],
+                zoom: 4.85,
+                pitch: 0,   // 0 = straight down; higher numbers tilt the map
+                bearing: 0  // 0 = north at the top
+            },
+
+            mapAnimation: "flyTo",
+            rotateAnimation: false,
+            callback: "",
+            onChapterEnter: [],
+            onChapterExit: []
+        },
        {
             id: "freeride",
-            alignment: "left", // charts appear on the opposite side: "left" card -> charts on the right
+            alignment: "right", // charts appear on the opposite side: "left" card -> charts on the right
             hidden: false,
             // tag: a short label above the headline, e.g. "Reporting + data", "Data + graphics", "Reporting"
             tag: "Reporting + data",
             title: "Illustrating RTD's reliance on the FreeRide for ridership",
             // role: who did what, shown under the headline
             role: "Story, data analysis and graphics by Michael Braithwaite",
-            description: `This story broke after a pre-meeting agenda showed that Denver's Regional Transportation District, which runs the city's the public buses and light rail, was considering cutting the free bus service through downtown's newly reconstructed pedestrian promenade.
+            description: `This story broke after a pre-meeting agenda showed that Denver's Regional Transportation District, which runs the city's public buses and light rail, was considering cutting the free bus service through downtown's newly reconstructed pedestrian promenade.
 
 Using public data on the agency's website, Michael showed just how much the FreeRide outpaces the RTD's other bus routes in ridership, a metric the agency has struggled to bring back up since the COVID-19 pandemic.`,
             // Link preview for the published story, shown under the text.
@@ -241,7 +298,7 @@ Using public data on the agency's website, Michael showed just how much the Free
             // Charts shown beside this card, top to bottom. Remove the // to use a line.
             // height is in pixels (Datawrapper charts adjust their own height; Flourish ones keep it).
             charts: [
-                { src: "https://datawrapper.dwcdn.net/tls0Y/3/", height: 450, title: "Short description of the chart" },
+                { src: "https://datawrapper.dwcdn.net/tls0Y/3/", height: 450, title: "RTD 16th Street FreeRide ridership vs. ridership on other bus routes" },
 
             ],
             location: {

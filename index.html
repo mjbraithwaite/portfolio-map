@@ -656,8 +656,10 @@
             }
 
             // Link preview for the published story, like the cards social media sites show
-            if (record.link && record.link.url) {
-                var link = record.link;
+            // "link" can be one card { ... } or several [ { ... }, { ... } ]
+            var linkList = Array.isArray(record.link) ? record.link : (record.link ? [record.link] : []);
+            linkList.forEach(function (link) {
+                if (!link || !link.url) return;
                 var preview = document.createElement('a');
                 preview.classList.add('link-preview');
                 preview.href = link.url;
@@ -684,7 +686,7 @@
                     preview.appendChild(linkText);
                 }
                 chapter.appendChild(preview);
-            }
+            });
 
             // Charts from Datawrapper or Flourish, listed in the chapter's "charts" setting.
             // Left and right cards get a panel on the opposite side; other cards show charts inside the card.
